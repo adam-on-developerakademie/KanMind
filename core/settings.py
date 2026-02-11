@@ -14,6 +14,8 @@ from pathlib import Path
 import os
 from datetime import timedelta
 
+import rest_framework
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -41,6 +43,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     # Third party apps
     "rest_framework",
+    "rest_framework.authtoken",
     "corsheaders",
     # Local apps
     "auth_app",
