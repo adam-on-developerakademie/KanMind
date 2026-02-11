@@ -150,5 +150,5 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 
-# Custom User Model falls gewünscht (Optional)
+# Custom User Model falls gewünscht.
 AUTH_USER_MODEL = 'auth_app.User'
