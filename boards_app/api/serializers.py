@@ -89,4 +89,35 @@ class BoardCreateUpdateSerializer(serializers.ModelSerializer):
             instance.members.set(members)
         
         return instance
+
+
+class BoardUpdateSerializer(serializers.ModelSerializer):
+    """
+    Serializer für Board-Updates (PATCH/PUT) mit vollständigen User-Daten
+    """
+    members = serializers.ListField(
+        child=serializers.IntegerField(),
+        write_only=True,
+        required=False
+    )
+    owner_data = UserSerializer(source='owner', read_only=True)
+    members_data = UserSerializer(source='members', many=True, read_only=True)
     
+    class Meta:
+        model = Board
+        fields = ['id', 'title', 'members', 'owner_data', 'members_data']
+    
+    def update(self, instance, validated_data):
+        """Board aktualisieren"""
+        members_ids = validated_data.pop('members', None)
+        
+        # Titel aktualisieren
+        instance.title = validated_data.get('title', instance.title)
+        instance.save()
+        
+        # Mitglieder aktualisieren
+        if members_ids is not None:
+            members = User.objects.filter(id__in=members_ids)
+            instance.members.set(members)
+        
+        return instance

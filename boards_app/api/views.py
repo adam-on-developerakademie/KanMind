@@ -10,7 +10,8 @@ from auth_app.api.serializers import UserSerializer
 from .serializers import (
     BoardListSerializer, 
     BoardDetailSerializer, 
-    BoardCreateUpdateSerializer
+    BoardCreateUpdateSerializer,
+    BoardUpdateSerializer
 )
 from .permissions import IsBoardMemberOrOwner, IsBoardOwner
 
@@ -28,6 +29,8 @@ class BoardViewSet(ModelViewSet):
             return BoardListSerializer
         elif self.action == 'retrieve':
             return BoardDetailSerializer
+        elif self.action in ['update', 'partial_update']:
+            return BoardUpdateSerializer
         return BoardCreateUpdateSerializer
     
     def get_permissions(self):
