@@ -1,55 +1,55 @@
 # KanMind Backend - Django REST API
 
-Ein Django-basiertes Backend für eine Kanban-Board-Anwendung mit Benutzerauthentifizierung, Board-Management und Aufgabenverwaltung.
+A Django-based backend for a Kanban board application with user authentication, board management, and task management.
 
-## 📋 Inhaltsverzeichnis
+## 📋 Table of Contents
 
-- [Technologie-Stack](#technologie-stack)
-- [Voraussetzungen](#voraussetzungen)
+- [Technology Stack](#technology-stack)
+- [Prerequisites](#prerequisites)
 - [Installation](#installation)
-- [Konfiguration](#konfiguration)
+- [Configuration](#configuration)
 - [Database Setup](#database-setup)
-- [API-Endpunkte](#api-endpunkte)
-- [Entwicklung](#entwicklung)
+- [API Endpoints](#api-endpoints)
+- [Development](#development)
 - [Deployment](#deployment)
-- [Fehlerbehebung](#fehlerbehebung)
+- [Troubleshooting](#troubleshooting)
 
-## 🛠 Technologie-Stack
+## 🛠 Technology Stack
 
 - **Backend Framework:** Django 6.0.2
 - **API:** Django REST Framework 3.16.1
-- **Datenbank:** SQLite (Entwicklung) / PostgreSQL (Produktion)
-- **Authentifizierung:** Token-basierte Authentifizierung
-- **CORS:** django-cors-headers für Frontend-Integration
+- **Database:** SQLite (Development) / PostgreSQL (Production)
+- **Authentication:** Token-based Authentication
+- **CORS:** django-cors-headers for Frontend Integration
 - **Environment Management:** python-decouple
 
-## 📦 Voraussetzungen
+## 📦 Prerequisites
 
-Stellen Sie sicher, dass folgende Software installiert ist:
+Make sure the following software is installed:
 
 - **Python 3.8+** ([Download](https://www.python.org/downloads/))
 - **pip** (Python Package Installer)
-- **Git** (optional, für Versionskontrolle)
+- **Git** (optional, for version control)
 
 ## 🚀 Installation
 
-### Schritt 1: Repository klonen/herunterladen
+### Step 1: Clone/Download Repository
 
 ```bash
-# Falls Sie Git verwenden
+# If using Git
 git clone <repository-url>
 cd KanMind/BACKEND/KanMind
 
-# Oder: Dateien manuell herunterladen und extrahieren
+# Or: Download and extract files manually
 ```
 
-### Schritt 2: Virtuelle Umgebung erstellen
+### Step 2: Create Virtual Environment
 
 ```bash
-# Virtuelle Umgebung erstellen
+# Create virtual environment
 python -m venv .venv
 
-# Virtuelle Umgebung aktivieren
+# Activate virtual environment
 # Windows:
 .venv\Scripts\activate
 
@@ -57,162 +57,162 @@ python -m venv .venv
 source .venv/bin/activate
 ```
 
-### Schritt 3: Dependencies installieren
+### Step 3: Install Dependencies
 
 ```bash
-# Alle erforderlichen Pakete installieren
+# Install all required packages
 pip install -r requirements.txt
 ```
 
-## ⚙️ Konfiguration
+## ⚙️ Configuration
 
-### Schritt 4: Umgebungsvariablen konfigurieren
+### Step 4: Configure Environment Variables
 
-Die sensiblen Daten werden in einer `.env` Datei verwaltet. **Erstellen Sie eine .env Datei basierend auf .env.example:**
+Sensitive data is managed in a `.env` file. **Create a .env file based on .env.example:**
 
 ```bash
-# .env.example nach .env kopieren
+# Copy .env.example to .env
 cp .env.example .env
 
 # Windows:
 copy .env.example .env
 ```
 
-**Bearbeiten Sie dann die .env Datei und passen Sie die Werte an:**
-- Generieren Sie einen neuen `SECRET_KEY` (siehe Schritt 5)
-- Konfigurieren Sie `ALLOWED_HOSTS` für Ihre Domain
-- Setzen Sie `DEBUG=False` für Produktion
+**Then edit the .env file and adjust the values:**
+- Generate a new `SECRET_KEY` (see Step 5)
+- Configure `ALLOWED_HOSTS` for your domain
+- Set `DEBUG=False` for production
 
-**⚠️ Sicherheitshinweise:**
-- **NIEMALS** die `.env` Datei in Git committen (ist bereits in .gitignore)
-- **Produktion:** Generieren Sie einen neuen SECRET_KEY für die Produktion
-- **Produktion:** Setzen Sie `DEBUG=False`
-- **Produktion:** Konfigurieren Sie `ALLOWED_HOSTS` entsprechend Ihrer Domain
-- **Datenschutz:** Verwenden Sie starke, einzigartige Passwörter
+**⚠️ Security Notes:**
+- **NEVER** commit the `.env` file to Git (already included in .gitignore)
+- **Production:** Generate a new SECRET_KEY for production
+- **Production:** Set `DEBUG=False`
+- **Production:** Configure `ALLOWED_HOSTS` according to your domain
+- **Privacy:** Use strong, unique passwords
 
-### Schritt 5: Neuen SECRET_KEY generieren
+### Step 5: Generate New SECRET_KEY
 
-**⚠️ WICHTIG:** Generieren Sie immer einen neuen SECRET_KEY für Ihre Installation:
+**⚠️ IMPORTANT:** Always generate a new SECRET_KEY for your installation:
 
 ```bash
 python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
 ```
 
-Kopieren Sie den generierten Key und ersetzen Sie `your-secret-key-here` in Ihrer `.env` Datei.
+Copy the generated key and replace `your-secret-key-here` in your `.env` file.
 
 ## 🗄️ Database Setup
 
-### Schritt 6: Datenbank-Migrationen durchführen
+### Step 6: Run Database Migrations
 
 ```bash
-# Migrationen erstellen
+# Create migrations
 python manage.py makemigrations
 
-# Migrationen anwenden
+# Apply migrations
 python manage.py migrate
 ```
 
-### Schritt 7: Superuser erstellen
+### Step 7: Create Superuser
 
 ```bash
-# Administratorkonto erstellen
+# Create administrator account
 python manage.py createsuperuser
 ```
 
-Folgen Sie den Anweisungen und geben Sie ein:
+Follow the instructions and enter:
 - Username
-- Email-Adresse
-- Passwort
+- Email address
+- Password
 
-## 🚀 Entwicklungsserver starten
+## 🚀 Start Development Server
 
-### Schritt 8: Server starten
+### Step 8: Start Server
 
 ```bash
-# Entwicklungsserver starten
+# Start development server
 python manage.py runserver
 ```
 
-Der Server ist nun unter `http://127.0.0.1:8000` erreichbar.
+The server is now accessible at `http://127.0.0.1:8000`.
 
-**Admin-Interface:** `http://127.0.0.1:8000/admin` (mit Superuser-Credentials)
+**Admin Interface:** `http://127.0.0.1:8000/admin` (with superuser credentials)
 
-## 🔗 API-Endpunkte
+## 🔗 API Endpoints
 
-### Authentifizierung
-- `POST /api/auth/register/` - Benutzerregistrierung
-- `POST /api/auth/login/` - Benutzeranmeldung
-- `POST /api/auth/logout/` - Benutzerabmeldung
+### Authentication
+- `POST /api/auth/register/` - User registration
+- `POST /api/auth/login/` - User login
+- `POST /api/auth/logout/` - User logout
 
 ### Boards
-- `GET /api/boards/` - Alle Boards abrufen
-- `POST /api/boards/` - Neues Board erstellen
-- `GET /api/boards/{id}/` - Board-Details
-- `PUT /api/boards/{id}/` - Board aktualisieren
-- `DELETE /api/boards/{id}/` - Board löschen
+- `GET /api/boards/` - Get all boards
+- `POST /api/boards/` - Create new board
+- `GET /api/boards/{id}/` - Board details
+- `PUT /api/boards/{id}/` - Update board
+- `DELETE /api/boards/{id}/` - Delete board
 
 ### Tasks
-- `GET /api/tasks/` - Alle Aufgaben abrufen
-- `POST /api/tasks/` - Neue Aufgabe erstellen
-- `GET /api/tasks/{id}/` - Aufgaben-Details
-- `PUT /api/tasks/{id}/` - Aufgabe aktualisieren
-- `DELETE /api/tasks/{id}/` - Aufgabe löschen
+- `GET /api/tasks/` - Get all tasks
+- `POST /api/tasks/` - Create new task
+- `GET /api/tasks/{id}/` - Task details
+- `PUT /api/tasks/{id}/` - Update task
+- `DELETE /api/tasks/{id}/` - Delete task
 
-## 💻 Entwicklung
+## 💻 Development
 
-### Projektstruktur
+### Project Structure
 
 ```
 KanMind/
-├── manage.py                 # Django Management-Skript
+├── manage.py                 # Django Management Script
 ├── requirements.txt          # Python Dependencies
-├── .env                     # Umgebungsvariablen (NICHT in Git!)
-├── .env.example             # Beispiel-Umgebungsvariablen
-├── .gitignore               # Git-Ignorier-Regeln
-├── db.sqlite3               # SQLite Datenbank
-├── core/                    # Django Hauptkonfiguration
-│   ├── settings.py         # Django Einstellungen
-│   ├── urls.py             # URL-Konfiguration
-│   └── wsgi.py             # WSGI Konfiguration
-├── auth_app/               # Benutzerauthentifizierung
-│   ├── models.py           # Benutzerdatenmodelle
+├── .env                     # Environment Variables (NOT in Git!)
+├── .env.example             # Example Environment Variables
+├── .gitignore               # Git Ignore Rules
+├── db.sqlite3               # SQLite Database
+├── core/                    # Django Main Configuration
+│   ├── settings.py         # Django Settings
+│   ├── urls.py             # URL Configuration
+│   └── wsgi.py             # WSGI Configuration
+├── auth_app/               # User Authentication
+│   ├── models.py           # User Data Models
 │   ├── api/                # Authentication API
-├── boards_app/             # Board-Management
-│   ├── models.py           # Board-Datenmodelle
+├── boards_app/             # Board Management
+│   ├── models.py           # Board Data Models
 │   ├── api/                # Board API
-└── tasks_app/              # Aufgabenverwaltung
-    ├── models.py           # Task-Datenmodelle
+└── tasks_app/              # Task Management
+    ├── models.py           # Task Data Models
     └── api/                # Task API
 ```
 
-### Code-Qualität
+### Code Quality
 
 ```bash
-# PEP 8-Konformität überprüfen
+# Check PEP 8 compliance
 flake8 core/ auth_app/ boards_app/ tasks_app/
 
-# Import-Reihenfolge überprüfen  
+# Check import order
 isort --check-only core/ auth_app/ boards_app/ tasks_app/
 
-# Code automatisch formatieren
+# Automatically format code
 black core/ auth_app/ boards_app/ tasks_app/
 
-# Imports automatisch sortieren
+# Automatically sort imports
 isort core/ auth_app/ boards_app/ tasks_app/
 
-# Tests ausführen
+# Run tests
 python manage.py test
 
-# Migrationsstatus überprüfen
+# Check migration status
 python manage.py showmigrations
 
-# Django Shell für Debugging
+# Django Shell for debugging
 python manage.py shell
 ```
 
 ### Frontend Integration (CORS)
 
-Das Backend ist für folgende Frontend-URLs konfiguriert:
+The backend is configured for the following frontend URLs:
 - `http://localhost:3000` (React)
 - `http://localhost:5000` (Flask/Vanilla JS)
 - `http://localhost:5500` (Live Server)
@@ -220,9 +220,9 @@ Das Backend ist für folgende Frontend-URLs konfiguriert:
 
 ## 🚢 Deployment
 
-### Produktionsumgebung vorbereiten
+### Prepare Production Environment
 
-1. **Umgebungsvariablen für Produktion:**
+1. **Environment Variables for Production:**
    ```env
    SECRET_KEY=<your-production-secret-key>
    DEBUG=False
@@ -231,7 +231,7 @@ Das Backend ist für folgende Frontend-URLs konfiguriert:
    CORS_ALLOW_ALL_ORIGINS=False
    ```
 
-2. **PostgreSQL für Produktion:**
+2. **PostgreSQL for Production:**
    ```env
    DATABASE_NAME=kanmind_db
    DATABASE_USER=kanmind_user
@@ -240,65 +240,65 @@ Das Backend ist für folgende Frontend-URLs konfiguriert:
    DATABASE_PORT=5432
    ```
 
-3. **Statische Dateien sammeln:**
+3. **Collect static files:**
    ```bash
    python manage.py collectstatic
    ```
 
 ### Heroku Deployment
 
-1. **Procfile erstellen:**
+1. **Create Procfile:**
    ```
    web: gunicorn core.wsgi --log-file -
    ```
 
-2. **runtime.txt erstellen:**
+2. **Create runtime.txt:**
    ```
    python-3.9.16
    ```
 
-3. **Requirements für Produktion erweitern:**
+3. **Extend Requirements for Production:**
    ```
    gunicorn==20.1.0
    psycopg2-binary==2.9.7
    django-heroku==0.3.1
    ```
 
-## 🔧 Fehlerbehebung
+## 🔧 Troubleshooting
 
-### Häufige Probleme
+### Common Issues
 
-#### 1. Virtual Environment Aktivierungsprobleme
+#### 1. Virtual Environment Activation Problems
 ```bash
 # Windows PowerShell Execution Policy
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 ```
 
-#### 2. Port bereits in Verwendung
+#### 2. Port Already in Use
 ```bash
-# Anderen Port verwenden
+# Use different port
 python manage.py runserver 8001
 ```
 
-#### 3. Migrationsfehler
+#### 3. Migration Errors
 ```bash
-# Migrationen zurücksetzen
+# Reset migrations
 python manage.py migrate --fake-initial
 ```
 
-#### 4. CORS-Fehler
-- Überprüfen Sie die `CORS_ALLOWED_ORIGINS` in [settings.py](core/settings.py)
-- Frontend-URL zur Liste hinzufügen
+#### 4. CORS Errors
+- Check `CORS_ALLOWED_ORIGINS` in [settings.py](core/settings.py)
+- Add frontend URL to the list
 
-#### 5. Authentication Token Probleme
+#### 5. Authentication Token Issues
 ```bash
-# Neue Tokens können im Django Admin erstellt werden
+# New tokens can be created in Django Admin
 http://127.0.0.1:8000/admin/authtoken/tokenproxy/
 ```
 
-## 📱 API-Nutzung Beispiele
+## 📱 API Usage Examples
 
-### Benutzer registrieren
+### Register User
 ```bash
 curl -X POST http://127.0.0.1:8000/api/auth/register/ \
   -H "Content-Type: application/json" \
@@ -310,42 +310,42 @@ curl -X POST http://127.0.0.1:8000/api/auth/register/ \
   }'
 ```
 
-### Board erstellen (mit Authentication Token)
+### Create Board (with Authentication Token)
 ```bash
 curl -X POST http://127.0.0.1:8000/api/boards/ \
   -H "Content-Type: application/json" \
   -H "Authorization: Token YOUR_TOKEN_HERE" \
   -d '{
-    "name": "Mein Kanban Board", 
-    "description": "Projektmanagement Board"
+    "name": "My Kanban Board", 
+    "description": "Project Management Board"
   }'
 ```
 
 ## 🤝 Contributing
 
-1. Fork das Repository
-2. Erstellen Sie einen Feature-Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit Ihre Änderungen (`git commit -m 'Add some AmazingFeature'`)
-4. Push zum Branch (`git push origin feature/AmazingFeature`)
-5. Öffnen Sie einen Pull Request
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-## 📄 Lizenz
+## 📄 License
 
-Dieses Projekt steht unter der MIT Lizenz. Siehe `LICENSE` Datei für Details.
+This project is licensed under the MIT License. See `LICENSE` file for details.
 
 ## 📞 Support
 
-Bei Fragen oder Problemen:
-1. Überprüfen Sie die [Fehlerbehebung](#fehlerbehebung) Sektion
-2. Suchen Sie nach bestehenden Issues
-3. Erstellen Sie ein neues Issue mit detaillierter Beschreibung
+For questions or issues:
+1. Check the [Troubleshooting](#troubleshooting) section
+2. Search for existing issues
+3. Create a new issue with detailed description
 
 ---
 
-**Entwicklungsumgebung erfolgreich eingerichtet!** 🎉
+**Development environment successfully set up!** 🎉
 
-Nächste Schritte:
-1. Frontend entwickeln und mit der API verbinden
-2. Zusätzliche Features implementieren
-3. Tests schreiben
-4. Für Produktion deployen
+Next steps:
+1. Develop frontend and connect to API
+2. Implement additional features
+3. Write tests
+4. Deploy to production
