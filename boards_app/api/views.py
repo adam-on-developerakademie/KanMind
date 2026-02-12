@@ -62,18 +62,33 @@ class EmailCheckView(APIView):
         email = request.query_params.get('email')
         
         if not email:
-            return Response(
-                {'error': 'E-Mail Parameter fehlt'}, 
-                status=status.HTTP_400_BAD_REQUEST
-            )
+            return self._email_missing_error()
         
+        user = self._find_user_by_email(email)
+        if not user:
+            return self._email_not_found_error()
+        
+        serializer = UserSerializer(user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    def _email_missing_error(self):
+        """Rückgabe für fehlenden E-Mail Parameter"""
+        return Response(
+            {'error': 'E-Mail Parameter fehlt'}, 
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    
+    def _find_user_by_email(self, email):
+        """Benutzer nach E-Mail suchen"""
         try:
-            user = User.objects.get(email=email)
-            serializer = UserSerializer(user)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return User.objects.get(email=email)
         except User.DoesNotExist:
-            return Response(
-                {'error': 'E-Mail nicht gefunden'}, 
-                status=status.HTTP_404_NOT_FOUND
-            )
+            return None
+    
+    def _email_not_found_error(self):
+        """Rückgabe für nicht gefundene E-Mail"""
+        return Response(
+            {'error': 'E-Mail nicht gefunden'}, 
+            status=status.HTTP_404_NOT_FOUND
+        )
             

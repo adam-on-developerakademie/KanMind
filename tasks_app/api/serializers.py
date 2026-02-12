@@ -35,30 +35,38 @@ class TaskCreateUpdateSerializer(serializers.ModelSerializer):
     
     def validate(self, attrs):
         """Validierung der Task-Daten"""
-        # Board-Zugehörigkeit prüfen bei Assignee und Reviewer
         board = attrs.get('board')
-        assignee_id = attrs.get('assignee_id')
-        reviewer_id = attrs.get('reviewer_id')
-        
-        if assignee_id:
-            try:
-                assignee = User.objects.get(id=assignee_id)
-                if not board.members.filter(id=assignee_id).exists() and board.owner != assignee:
-                    raise serializers.ValidationError("Assignee muss Mitglied des Boards sein.")
-                attrs['assignee'] = assignee
-            except User.DoesNotExist:
-                raise serializers.ValidationError("Assignee existiert nicht.")
-        
-        if reviewer_id:
-            try:
-                reviewer = User.objects.get(id=reviewer_id)
-                if not board.members.filter(id=reviewer_id).exists() and board.owner != reviewer:
-                    raise serializers.ValidationError("Reviewer muss Mitglied des Boards sein.")
-                attrs['reviewer'] = reviewer
-            except User.DoesNotExist:
-                raise serializers.ValidationError("Reviewer existiert nicht.")
-        
+        self._validate_assignee(attrs, board)
+        self._validate_reviewer(attrs, board)
         return attrs
+    
+    def _validate_assignee(self, attrs, board):
+        """Validiere Assignee-Zuordnung"""
+        assignee_id = attrs.get('assignee_id')
+        if assignee_id:
+            assignee = self._get_user_or_error(assignee_id, "Assignee existiert nicht.")
+            self._check_board_membership(assignee, board, "Assignee muss Mitglied des Boards sein.")
+            attrs['assignee'] = assignee
+    
+    def _validate_reviewer(self, attrs, board):
+        """Validiere Reviewer-Zuordnung"""
+        reviewer_id = attrs.get('reviewer_id')
+        if reviewer_id:
+            reviewer = self._get_user_or_error(reviewer_id, "Reviewer existiert nicht.")
+            self._check_board_membership(reviewer, board, "Reviewer muss Mitglied des Boards sein.")
+            attrs['reviewer'] = reviewer
+    
+    def _get_user_or_error(self, user_id, error_message):
+        """Benutzer abrufen oder Fehler werfen"""
+        try:
+            return User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            raise serializers.ValidationError(error_message)
+    
+    def _check_board_membership(self, user, board, error_message):
+        """Board-Mitgliedschaft prüfen"""
+        if not (board.members.filter(id=user.id).exists() or board.owner == user):
+            raise serializers.ValidationError(error_message)
     
     def create(self, validated_data):
         """Task erstellen"""

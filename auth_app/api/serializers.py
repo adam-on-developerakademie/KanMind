@@ -50,29 +50,42 @@ class UserLoginSerializer(serializers.Serializer):
     
     def validate(self, attrs):
         """Validierung der Login-Daten"""
+        email, password = self._extract_credentials(attrs)
+        user = self._authenticate_user(email, password)
+        self._check_user_status(user)
+        return self._prepare_response_data(attrs, user)
+    
+    def _extract_credentials(self, attrs):
+        """Extrahiere und validiere Credentials"""
         email = attrs.get('email')
         password = attrs.get('password')
         
         if not email or not password:
             raise serializers.ValidationError("E-Mail und Passwort sind erforderlich.")
         
-        # Benutzer über E-Mail finden
+        return email, password
+    
+    def _authenticate_user(self, email, password):
+        """Authentifiziere Benutzer über E-Mail"""
         try:
             user_obj = User.objects.get(email=email)
             username = user_obj.username
         except User.DoesNotExist:
             raise serializers.ValidationError("Ungültige Anmeldedaten.")
         
-        # Authentifizierung mit Username (da Django authenticate() Username erwartet)
         user = authenticate(username=username, password=password)
-        
         if not user:
             raise serializers.ValidationError("Ungültige Anmeldedaten.")
         
+        return user
+    
+    def _check_user_status(self, user):
+        """Prüfe ob Benutzer aktiv ist"""
         if not user.is_active:
             raise serializers.ValidationError("Benutzerkonto ist deaktiviert.")
-        
-        # Token erstellen oder abrufen
+    
+    def _prepare_response_data(self, attrs, user):
+        """Bereite Response-Daten mit Token vor"""
         token, created = Token.objects.get_or_create(user=user)
         
         attrs['user'] = user
