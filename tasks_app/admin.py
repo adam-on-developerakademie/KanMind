@@ -7,7 +7,7 @@ from .models import Task, Comment
 @admin.register(Task)
 class TaskAdmin(admin.ModelAdmin):
     """
-    Admin Interface für Task Model
+    Admin Interface for Task Model
     """
     list_display = ['title', 'board', 'status', 'priority', 'assignee', 'reviewer', 'due_date', 'created_at']
     list_filter = ['status', 'priority', 'created_at', 'due_date', 'board']
@@ -37,7 +37,7 @@ class TaskAdmin(admin.ModelAdmin):
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
     """
-    Admin Interface für Comment Model
+    Admin Interface for Comment Model
     """
     list_display = ['task', 'author', 'content_preview', 'created_at']
     list_filter = ['created_at', 'task__board']
@@ -45,7 +45,7 @@ class CommentAdmin(admin.ModelAdmin):
     readonly_fields = ['created_at']
     
     def content_preview(self, obj):
-        """Kurze Vorschau des Kommentarinhalts"""
+        """Short preview of comment content"""
         return obj.content[:50] + "..." if len(obj.content) > 50 else obj.content
     content_preview.short_description = "Inhalt (Vorschau)"
     

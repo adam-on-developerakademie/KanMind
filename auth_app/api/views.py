@@ -10,7 +10,7 @@ User = get_user_model()
 class RegistrationView(APIView):
     """
     POST /api/registration/
-    Erstellt einen neuen Benutzer
+    Creates a new user
     """
     permission_classes = [AllowAny]
     
@@ -30,7 +30,7 @@ class RegistrationView(APIView):
 class LoginView(APIView):
     """
     POST /api/login/
-    Authentifiziert einen Benutzer
+    Authenticates a user
     """
     permission_classes = [AllowAny]
     

@@ -8,7 +8,7 @@ User = get_user_model()
 
 class Board(models.Model):
     """
-    Board Model für Kanban-Boards
+    Board Model for Kanban boards
     """
     title = models.CharField(max_length=200, verbose_name="Titel")
     owner = models.ForeignKey(
@@ -36,20 +36,20 @@ class Board(models.Model):
     
     @property
     def member_count(self):
-        """Anzahl der Mitglieder"""
+        """Number of members"""
         return self.members.count()
     
     @property
     def ticket_count(self):
-        """Gesamtanzahl der Tasks"""
+        """Total number of tasks"""
         return self.tasks.count()
     
     @property
     def tasks_to_do_count(self):
-        """Anzahl der To-Do Tasks"""
+        """Number of to-do tasks"""
         return self.tasks.filter(status='to-do').count()
     
     @property
     def tasks_high_prio_count(self):
-        """Anzahl der High-Priority Tasks"""
+        """Number of high-priority tasks"""
         return self.tasks.filter(priority='high').count()

@@ -60,7 +60,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-# REST Framework Konfiguration
+# REST Framework Configuration
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.TokenAuthentication",
@@ -93,7 +93,7 @@ TEMPLATES = [
     },
 ]
 
-# CORS Einstellungen für Frontend-Verbindung
+# CORS settings for frontend connection
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5000",
     "http://127.0.0.1:5000",
@@ -109,7 +109,7 @@ CORS_ALLOWED_ORIGINS = [
 
 CORS_ALLOW_CREDENTIALS = True
 
-# Zusätzliche CORS-Einstellungen für bessere Kompatibilität
+# Additional CORS settings for better compatibility
 CORS_ALLOW_ALL_ORIGINS = config('CORS_ALLOW_ALL_ORIGINS', default=DEBUG, cast=bool)
 
 CORS_ALLOWED_HEADERS = [
@@ -186,5 +186,5 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 
-# Custom User Model falls gewünscht.
+# Custom User Model if desired.
 AUTH_USER_MODEL = 'auth_app.User'

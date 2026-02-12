@@ -8,7 +8,7 @@ User = get_user_model()
 
 class Task(models.Model):
     """
-    Task Model für Aufgaben in Boards
+    Task Model for tasks in boards
     """
     STATUS_CHOICES = [
         ('to-do', 'To Do'),
@@ -79,12 +79,12 @@ class Task(models.Model):
     
     @property
     def comments_count(self):
-        """Anzahl der Kommentare"""
+        """Number of comments"""
         return self.comments.count()
 
 class Comment(models.Model):
     """
-    Comment Model für Kommentare zu Tasks
+    Comment Model for task comments
     """
     task = models.ForeignKey(
         Task,

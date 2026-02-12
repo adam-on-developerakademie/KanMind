@@ -7,7 +7,7 @@ from .models import Board
 @admin.register(Board)
 class BoardAdmin(admin.ModelAdmin):
     """
-    Admin Interface für Board Model
+    Admin Interface for Board Model
     """
     list_display = ['title', 'owner', 'member_count', 'ticket_count', 'created_at']
     list_filter = ['created_at', 'updated_at']

@@ -10,7 +10,7 @@ User = get_user_model()
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
     """
-    Admin Interface für Custom User Model
+    Admin Interface for Custom User Model
     """
     list_display = ['email', 'fullname', 'username', 'is_active', 'is_staff', 'date_joined']
     list_filter = ['is_active', 'is_staff', 'is_superuser', 'date_joined']

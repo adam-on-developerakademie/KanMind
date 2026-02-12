@@ -10,7 +10,7 @@ class User(AbstractUser):
     fullname = models.CharField(max_length=150, verbose_name="Vollständiger Name")
     email = models.EmailField(unique=True, verbose_name="E-Mail-Adresse")
     
-    # Username nicht verwenden, stattdessen E-Mail
+    # Don't use username, use email instead
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'fullname']
     

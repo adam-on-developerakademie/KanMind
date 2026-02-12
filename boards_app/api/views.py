@@ -19,12 +19,12 @@ User = get_user_model()
 
 class BoardViewSet(ModelViewSet):
     """
-    ViewSet für Board CRUD-Operationen
+    ViewSet for Board CRUD operations
     """
     permission_classes = [IsAuthenticated]
     
     def get_serializer_class(self):
-        """Verschiedene Serializer je nach Action"""
+        """Different serializer per action"""
         if self.action == 'list':
             return BoardListSerializer
         elif self.action == 'retrieve':
@@ -34,7 +34,7 @@ class BoardViewSet(ModelViewSet):
         return BoardCreateUpdateSerializer
     
     def get_permissions(self):
-        """Verschiedene Permissions je nach Action"""
+        """Different permissions per action"""
         if self.action in ['retrieve', 'update', 'partial_update']:
             permission_classes = [IsAuthenticated, IsBoardMemberOrOwner]
         elif self.action == 'destroy':
@@ -45,7 +45,7 @@ class BoardViewSet(ModelViewSet):
         return [permission() for permission in permission_classes]
     
     def get_queryset(self):
-        """Nur Boards die der User sehen darf"""
+        """Only boards user is allowed to see"""
         user = self.request.user
         return Board.objects.filter(
             models.Q(owner=user) | models.Q(members=user)
@@ -54,7 +54,7 @@ class BoardViewSet(ModelViewSet):
 class EmailCheckView(APIView):
     """
     GET /api/email-check/?email=example@mail.com
-    Prüft ob E-Mail existiert
+    Checks if email exists
     """
     permission_classes = [IsAuthenticated]
     
@@ -72,21 +72,21 @@ class EmailCheckView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
     
     def _email_missing_error(self):
-        """Rückgabe für fehlenden E-Mail Parameter"""
+        """Return for missing email parameter"""
         return Response(
             {'error': 'E-Mail Parameter fehlt'}, 
             status=status.HTTP_400_BAD_REQUEST
         )
     
     def _find_user_by_email(self, email):
-        """Benutzer nach E-Mail suchen"""
+        """Search user by email"""
         try:
             return User.objects.get(email=email)
         except User.DoesNotExist:
             return None
     
     def _email_not_found_error(self):
-        """Rückgabe für nicht gefundene E-Mail"""
+        """Return for email not found"""
         return Response(
             {'error': 'E-Mail nicht gefunden'}, 
             status=status.HTTP_404_NOT_FOUND

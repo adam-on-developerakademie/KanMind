@@ -11,12 +11,12 @@ from .permissions import IsTaskBoardMember, IsTaskCreatorOrBoardOwner, IsComment
 
 class TaskBaseView(APIView):
     """
-    Base-Klasse für Task-Views mit gemeinsamer Funktionalität
+    Base class for Task views with shared functionality
     """
     permission_classes = [IsAuthenticated]
     
     def get_task_or_404(self, task_id):
-        """Task-Objekt abrufen oder 404 zurückgeben"""
+        """Get task object or return 404"""
         try:
             return Task.objects.get(id=task_id)
         except Task.DoesNotExist:
@@ -26,12 +26,12 @@ class TaskBaseView(APIView):
             )
     
     def check_board_permission(self, user, board):
-        """Prüfe Board-Berechtigung"""
+        """Check board permission"""
         return (board.owner == user or 
                 board.members.filter(id=user.id).exists())
     
     def get_permission_error(self):
-        """Standard-Berechtigungsfehler"""
+        """Standard permission error"""
         return Response(
             {'error': 'Keine Berechtigung'}, 
             status=status.HTTP_403_FORBIDDEN
@@ -64,7 +64,7 @@ class TaskReviewingView(APIView):
 class TaskCreateView(TaskBaseView):
     """
     POST /api/tasks/
-    Task erstellen
+    Create task
     """
     def post(self, request):
         serializer = self._get_validated_serializer(request)
@@ -79,7 +79,7 @@ class TaskCreateView(TaskBaseView):
         return Response(response_serializer.data, status=status.HTTP_201_CREATED)
     
     def _get_validated_serializer(self, request):
-        """Validierungslogik für Serializer"""
+        """Validation logic for serializer"""
         serializer = TaskCreateUpdateSerializer(
             data=request.data,
             context={'request': request}
@@ -87,13 +87,13 @@ class TaskCreateView(TaskBaseView):
         return serializer if serializer.is_valid() else None
     
     def _check_create_permission(self, request, board):
-        """Prüfe Erstellungsberechtigung für Board"""
+        """Check creation permission for board"""
         return self.check_board_permission(request.user, board)
 
 class TaskDetailView(TaskBaseView):
     """
     PATCH/DELETE /api/tasks/{task_id}/
-    Task aktualisieren oder löschen
+    Update or delete task
     """
     def patch(self, request, task_id):
         task = self.get_task_or_404(task_id)
@@ -131,13 +131,13 @@ class TaskDetailView(TaskBaseView):
         return Response(status=status.HTTP_204_NO_CONTENT)
     
     def _check_delete_permission(self, user, task):
-        """Prüfe Lösch-Berechtigung"""
+        """Check delete permission"""
         return (task.created_by == user or task.board.owner == user)
 
 class TaskCommentsView(TaskBaseView):
     """
     GET/POST /api/tasks/{task_id}/comments/
-    Kommentare abrufen oder erstellen
+    Get or create comments
     """
     def get(self, request, task_id):
         task = self.get_task_or_404(task_id)
@@ -150,7 +150,7 @@ class TaskCommentsView(TaskBaseView):
         return self._get_comments_response(task)
     
     def _get_comments_response(self, task):
-        """Kommentare abrufen und Response erstellen"""
+        """Get comments and create response"""
         comments = task.comments.all()
         serializer = CommentSerializer(comments, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -166,7 +166,7 @@ class TaskCommentsView(TaskBaseView):
         return self._create_comment(request, task)
     
     def _create_comment(self, request, task):
-        """Kommentar-Erstellungslogik"""
+        """Comment creation logic"""
         serializer = CommentSerializer(
             data=request.data,
             context={'request': request}
@@ -182,7 +182,7 @@ class TaskCommentsView(TaskBaseView):
 class CommentDetailView(APIView):
     """
     DELETE /api/tasks/{task_id}/comments/{comment_id}/
-    Kommentar löschen
+    Delete comment
     """
     permission_classes = [IsAuthenticated]
     
@@ -201,7 +201,7 @@ class CommentDetailView(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
     
     def _get_comment_or_404(self, task_id, comment_id):
-        """Kommentar abrufen oder 404 zurückgeben"""
+        """Get comment or return 404"""
         try:
             return Comment.objects.get(id=comment_id, task_id=task_id)
         except Comment.DoesNotExist:
@@ -211,5 +211,5 @@ class CommentDetailView(APIView):
             )
     
     def _check_author_permission(self, user, comment):
-        """Prüfe ob Benutzer der Autor ist"""
+        """Check if user is the author"""
         return comment.author == user
