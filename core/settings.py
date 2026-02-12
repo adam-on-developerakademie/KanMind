@@ -11,11 +11,8 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
-import os
-from datetime import timedelta
-from decouple import config, Csv
 
-import rest_framework
+from decouple import Csv, config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -98,9 +95,9 @@ TEMPLATES = [
 
 # CORS Einstellungen für Frontend-Verbindung
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5000",  
+    "http://localhost:5000",
     "http://127.0.0.1:5000",
-    "http://localhost:5500",  
+    "http://localhost:5500",
     "http://127.0.0.1:5500",
     "http://localhost:8000",
     "http://127.0.0.1:8000",
@@ -155,7 +152,10 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
+        "NAME": (
+            "django.contrib.auth.password_validation."
+            "UserAttributeSimilarityValidator"
+        ),
     },
     {
         "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",

@@ -188,6 +188,18 @@ KanMind/
 ### Code-Qualität
 
 ```bash
+# PEP 8-Konformität überprüfen
+flake8 core/ auth_app/ boards_app/ tasks_app/
+
+# Import-Reihenfolge überprüfen  
+isort --check-only core/ auth_app/ boards_app/ tasks_app/
+
+# Code automatisch formatieren
+black core/ auth_app/ boards_app/ tasks_app/
+
+# Imports automatisch sortieren
+isort core/ auth_app/ boards_app/ tasks_app/
+
 # Tests ausführen
 python manage.py test
 
