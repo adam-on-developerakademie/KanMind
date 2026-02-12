@@ -47,12 +47,17 @@ class BoardCreateUpdateSerializer(serializers.ModelSerializer):
         write_only=True,
         required=False
     )
-    owner_data = UserSerializer(source='owner', read_only=True)
-    members_data = UserSerializer(source='members', many=True, read_only=True)
+    # Read-only Felder für die Antwort
+    member_count = serializers.IntegerField(read_only=True)
+    ticket_count = serializers.IntegerField(read_only=True) 
+    tasks_to_do_count = serializers.IntegerField(read_only=True)
+    tasks_high_prio_count = serializers.IntegerField(read_only=True)
+    owner_id = serializers.IntegerField(source='owner.id', read_only=True)
     
     class Meta:
         model = Board
-        fields = ['id', 'title', 'members', 'owner_data', 'members_data']
+        fields = ['id', 'title', 'members', 'member_count', 'ticket_count', 
+                 'tasks_to_do_count', 'tasks_high_prio_count', 'owner_id']
     
     def create(self, validated_data):
         """Board erstellen mit Mitgliedern"""
