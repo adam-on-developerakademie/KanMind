@@ -1,12 +1,14 @@
-from rest_framework.viewsets import ModelViewSet
-from rest_framework.views import APIView
-from rest_framework.response import Response
+from django.db import models
+
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
-from django.db import models
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework.viewsets import ModelViewSet
+
 from tasks_app.models import Task, Comment
-from .serializers import TaskSerializer, TaskCreateUpdateSerializer, CommentSerializer
 from .permissions import IsTaskBoardMember, IsTaskCreatorOrBoardOwner, IsCommentAuthor
+from .serializers import TaskSerializer, TaskCreateUpdateSerializer, CommentSerializer
 
 
 class TaskBaseView(APIView):

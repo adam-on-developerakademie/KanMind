@@ -1,7 +1,9 @@
-from rest_framework import serializers
-from boards_app.models import Board
-from auth_app.api.serializers import UserSerializer
 from django.contrib.auth import get_user_model
+
+from rest_framework import serializers
+
+from auth_app.api.serializers import UserSerializer
+from boards_app.models import Board
 
 User = get_user_model()
 
