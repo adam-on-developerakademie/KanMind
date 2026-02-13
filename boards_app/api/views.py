@@ -74,7 +74,7 @@ class EmailCheckView(APIView):
     def _email_missing_error(self):
         """Return for missing email parameter"""
         return Response(
-            {'error': 'E-Mail Parameter fehlt'}, 
+            {'error': 'Email parameter missing'}, 
             status=status.HTTP_400_BAD_REQUEST
         )
     
@@ -88,7 +88,7 @@ class EmailCheckView(APIView):
     def _email_not_found_error(self):
         """Return for email not found"""
         return Response(
-            {'error': 'E-Mail nicht gefunden'}, 
+            {'error': 'Email not found'}, 
             status=status.HTTP_404_NOT_FOUND
         )
             

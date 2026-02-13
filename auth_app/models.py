@@ -8,7 +8,7 @@ class User(AbstractUser):
     Custom User Model mit zusätzlichen Feldern
     """
     fullname = models.CharField(max_length=150, verbose_name="Full Name")
-    email = models.EmailField(unique=True, verbose_name="E-Mail-Adresse")
+    email = models.EmailField(unique=True, verbose_name="Email Address")
     
     # Don't use username, use email instead
     USERNAME_FIELD = 'email'
