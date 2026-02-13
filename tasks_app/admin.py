@@ -15,20 +15,20 @@ class TaskAdmin(admin.ModelAdmin):
     readonly_fields = ['created_at', 'updated_at', 'comments_count']
     
     fieldsets = [
-        ('Grundinformationen', {
+        ('Basic Information', {
             'fields': ('title', 'description', 'board', 'created_by')
         }),
-        ('Status und Priorität', {
+        ('Status and Priority', {
             'fields': ('status', 'priority', 'due_date')
         }),
-        ('Zuweisungen', {
+        ('Assignments', {
             'fields': ('assignee', 'reviewer')
         }),
-        ('Statistiken', {
+        ('Statistics', {
             'fields': ('comments_count',),
             'classes': ('collapse',)
         }),
-        ('Zeitstempel', {
+        ('Timestamps', {
             'fields': ('created_at', 'updated_at'),
             'classes': ('collapse',)
         }),
@@ -47,5 +47,5 @@ class CommentAdmin(admin.ModelAdmin):
     def content_preview(self, obj):
         """Short preview of comment content"""
         return obj.content[:50] + "..." if len(obj.content) > 50 else obj.content
-    content_preview.short_description = "Inhalt (Vorschau)"
+    content_preview.short_description = "Content (Preview)"
     

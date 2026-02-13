@@ -7,7 +7,7 @@ class User(AbstractUser):
     """
     Custom User Model mit zusätzlichen Feldern
     """
-    fullname = models.CharField(max_length=150, verbose_name="Vollständiger Name")
+    fullname = models.CharField(max_length=150, verbose_name="Full Name")
     email = models.EmailField(unique=True, verbose_name="E-Mail-Adresse")
     
     # Don't use username, use email instead
@@ -15,8 +15,8 @@ class User(AbstractUser):
     REQUIRED_FIELDS = ['username', 'fullname']
     
     class Meta:
-        verbose_name = "Benutzer"
-        verbose_name_plural = "Benutzer"
+        verbose_name = "User"
+        verbose_name_plural = "Users"
         ordering = ['email']
     
     def __str__(self):

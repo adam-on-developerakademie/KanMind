@@ -20,7 +20,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         """Validation for password confirmation"""
         if attrs['password'] != attrs['repeated_password']:
-            raise serializers.ValidationError("Passwörter stimmen nicht überein.")
+            raise serializers.ValidationError("Passwords do not match.")
         return attrs
     
     def create(self, validated_data):
@@ -61,7 +61,7 @@ class UserLoginSerializer(serializers.Serializer):
         password = attrs.get('password')
         
         if not email or not password:
-            raise serializers.ValidationError("E-Mail und Passwort sind erforderlich.")
+            raise serializers.ValidationError("Email and password are required.")
         
         return email, password
     
@@ -71,18 +71,18 @@ class UserLoginSerializer(serializers.Serializer):
             user_obj = User.objects.get(email=email)
             username = user_obj.username
         except User.DoesNotExist:
-            raise serializers.ValidationError("Ungültige Anmeldedaten.")
+            raise serializers.ValidationError("Invalid credentials.")
         
         user = authenticate(username=username, password=password)
         if not user:
-            raise serializers.ValidationError("Ungültige Anmeldedaten.")
+            raise serializers.ValidationError("Invalid credentials.")
         
         return user
     
     def _check_user_status(self, user):
         """Check if user is active"""
         if not user.is_active:
-            raise serializers.ValidationError("Benutzerkonto ist deaktiviert.")
+            raise serializers.ValidationError("User account is disabled.")
     
     def _prepare_response_data(self, attrs, user):
         """Prepare response data with token"""

@@ -29,8 +29,8 @@ class Task(models.Model):
         related_name='tasks',
         verbose_name="Board"
     )
-    title = models.CharField(max_length=200, verbose_name="Titel")
-    description = models.TextField(blank=True, verbose_name="Beschreibung")
+    title = models.CharField(max_length=200, verbose_name="Title")
+    description = models.TextField(blank=True, verbose_name="Description")
     status = models.CharField(
         max_length=20,
         choices=STATUS_CHOICES,
@@ -41,7 +41,7 @@ class Task(models.Model):
         max_length=10,
         choices=PRIORITY_CHOICES,
         default='medium',
-        verbose_name="Priorität"
+        verbose_name="Priority"
     )
     assignee = models.ForeignKey(
         User,
@@ -49,7 +49,7 @@ class Task(models.Model):
         null=True,
         blank=True,
         related_name='assigned_tasks',
-        verbose_name="Zugewiesener Bearbeiter"
+        verbose_name="Assigned Worker"
     )
     reviewer = models.ForeignKey(
         User,
@@ -59,19 +59,19 @@ class Task(models.Model):
         related_name='reviewing_tasks',
         verbose_name="Reviewer"
     )
-    due_date = models.DateField(null=True, blank=True, verbose_name="Fälligkeitsdatum")
+    due_date = models.DateField(null=True, blank=True, verbose_name="Due Date")
     created_by = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name='created_tasks',
-        verbose_name="Erstellt von"
+        verbose_name="Created By"
     )
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Erstellt am")
-    updated_at = models.DateTimeField(auto_now=True, verbose_name="Aktualisiert am")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Created At")
+    updated_at = models.DateTimeField(auto_now=True, verbose_name="Updated At")
     
     class Meta:
-        verbose_name = "Aufgabe"
-        verbose_name_plural = "Aufgaben"
+        verbose_name = "Task"
+        verbose_name_plural = "Tasks"
         ordering = ['-created_at']
     
     def __str__(self):
@@ -96,16 +96,16 @@ class Comment(models.Model):
         User,
         on_delete=models.CASCADE,
         related_name='comments',
-        verbose_name="Autor"
+        verbose_name="Author"
     )
-    content = models.TextField(verbose_name="Inhalt")
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Erstellt am")
+    content = models.TextField(verbose_name="Content")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Created At")
     
     class Meta:
-        verbose_name = "Kommentar"
-        verbose_name_plural = "Kommentare"
+        verbose_name = "Comment"
+        verbose_name_plural = "Comments"
         ordering = ['created_at']
     
     def __str__(self):
-        return f"Kommentar von {self.author.fullname} zu {self.task.title}"
+        return f"Comment by {self.author.fullname} on {self.task.title}"
     

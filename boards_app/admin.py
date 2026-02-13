@@ -16,13 +16,13 @@ class BoardAdmin(admin.ModelAdmin):
     readonly_fields = ['created_at', 'updated_at']
     
     fieldsets = [
-        ('Grundinformationen', {
+        ('Basic Information', {
             'fields': ('title', 'owner')
         }),
-        ('Mitglieder', {
+        ('Members', {
             'fields': ('members',)
         }),
-        ('Zeitstempel', {
+        ('Timestamps', {
             'fields': ('created_at', 'updated_at'),
             'classes': ('collapse',)
         }),

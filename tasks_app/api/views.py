@@ -21,7 +21,7 @@ class TaskBaseView(APIView):
             return Task.objects.get(id=task_id)
         except Task.DoesNotExist:
             return Response(
-                {'error': 'Task nicht gefunden'}, 
+                {'error': 'Task not found'}, 
                 status=status.HTTP_404_NOT_FOUND
             )
     
@@ -33,14 +33,14 @@ class TaskBaseView(APIView):
     def get_permission_error(self):
         """Standard permission error"""
         return Response(
-            {'error': 'Keine Berechtigung'}, 
+            {'error': 'No permission'}, 
             status=status.HTTP_403_FORBIDDEN
         )
 
 class TaskAssignedToMeView(APIView):
     """
     GET /api/tasks/assigned-to-me/
-    Tasks die mir zugewiesen sind
+    Tasks assigned to me
     """
     permission_classes = [IsAuthenticated]
     
@@ -52,7 +52,7 @@ class TaskAssignedToMeView(APIView):
 class TaskReviewingView(APIView):
     """
     GET /api/tasks/reviewing/
-    Tasks die ich reviewen soll
+    Tasks I should review
     """
     permission_classes = [IsAuthenticated]
     
@@ -67,8 +67,12 @@ class TaskCreateView(TaskBaseView):
     Create task
     """
     def post(self, request):
-        serializer = self._get_validated_serializer(request)
-        if not serializer:
+        serializer = TaskCreateUpdateSerializer(
+            data=request.data,
+            context={'request': request}
+        )
+        
+        if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
         if not self._check_create_permission(request, serializer.validated_data['board']):
@@ -77,14 +81,6 @@ class TaskCreateView(TaskBaseView):
         task = serializer.save()
         response_serializer = TaskSerializer(task)
         return Response(response_serializer.data, status=status.HTTP_201_CREATED)
-    
-    def _get_validated_serializer(self, request):
-        """Validation logic for serializer"""
-        serializer = TaskCreateUpdateSerializer(
-            data=request.data,
-            context={'request': request}
-        )
-        return serializer if serializer.is_valid() else None
     
     def _check_create_permission(self, request, board):
         """Check creation permission for board"""
@@ -106,7 +102,7 @@ class TaskDetailView(TaskBaseView):
         return self._update_task(request, task)
     
     def _update_task(self, request, task):
-        """Task-Update-Logik"""
+        """Task update logic"""
         serializer = TaskCreateUpdateSerializer(
             task,
             data=request.data,
@@ -193,7 +189,7 @@ class CommentDetailView(APIView):
         
         if not self._check_author_permission(request.user, comment):
             return Response(
-                {'error': 'Keine Berechtigung zum Löschen'}, 
+                {'error': 'No permission to delete'}, 
                 status=status.HTTP_403_FORBIDDEN
             )
         
@@ -206,7 +202,7 @@ class CommentDetailView(APIView):
             return Comment.objects.get(id=comment_id, task_id=task_id)
         except Comment.DoesNotExist:
             return Response(
-                {'error': 'Kommentar nicht gefunden'}, 
+                {'error': 'Comment not found'}, 
                 status=status.HTTP_404_NOT_FOUND
             )
     

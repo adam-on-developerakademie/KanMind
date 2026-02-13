@@ -10,7 +10,7 @@ class Board(models.Model):
     """
     Board Model for Kanban boards
     """
-    title = models.CharField(max_length=200, verbose_name="Titel")
+    title = models.CharField(max_length=200, verbose_name="Title")
     owner = models.ForeignKey(
         User, 
         on_delete=models.CASCADE, 
@@ -21,10 +21,10 @@ class Board(models.Model):
         User,
         related_name="board_memberships",
         blank=True,
-        verbose_name="Mitglieder"
+        verbose_name="Members"
     )
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Erstellt am")
-    updated_at = models.DateTimeField(auto_now=True, verbose_name="Aktualisiert am")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Created At")
+    updated_at = models.DateTimeField(auto_now=True, verbose_name="Updated At")
     
     class Meta:
         verbose_name = "Board"
