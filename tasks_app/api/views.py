@@ -17,14 +17,14 @@ class TaskBaseView(APIView):
     """
     permission_classes = [IsAuthenticated]
     
-    def get_task_or_permission_denied(self, task_id):
-        """Get task object or return permission denied for security"""
+    def get_task_or_404(self, task_id):
+        """Get task object or return 404"""
         try:
             return Task.objects.get(id=task_id)
         except Task.DoesNotExist:
             return Response(
-                {'error': 'No permission'}, 
-                status=status.HTTP_403_FORBIDDEN
+                {'error': 'Task not found'}, 
+                status=status.HTTP_404_NOT_FOUND
             )
     
     def check_board_permission(self, user, board):
@@ -94,7 +94,7 @@ class TaskDetailView(TaskBaseView):
     Update or delete task
     """
     def patch(self, request, task_id):
-        task = self.get_task_or_permission_denied(task_id)
+        task = self.get_task_or_404(task_id)
         if isinstance(task, Response):  # Error Response
             return task
         
@@ -118,7 +118,7 @@ class TaskDetailView(TaskBaseView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     def delete(self, request, task_id):
-        task = self.get_task_or_permission_denied(task_id)
+        task = self.get_task_or_404(task_id)
         if isinstance(task, Response):  # Error Response
             return task
         
@@ -138,7 +138,7 @@ class TaskCommentsView(TaskBaseView):
     Get or create comments
     """
     def get(self, request, task_id):
-        task = self.get_task_or_permission_denied(task_id)
+        task = self.get_task_or_404(task_id)
         if isinstance(task, Response):  # Error Response
             return task
         
@@ -154,7 +154,7 @@ class TaskCommentsView(TaskBaseView):
         return Response(serializer.data, status=status.HTTP_200_OK)
     
     def post(self, request, task_id):
-        task = self.get_task_or_permission_denied(task_id)
+        task = self.get_task_or_404(task_id)
         if isinstance(task, Response):  # Error Response
             return task
         
@@ -185,7 +185,7 @@ class CommentDetailView(APIView):
     permission_classes = [IsAuthenticated]
     
     def delete(self, request, task_id, comment_id):
-        comment = self._get_comment_or_permission_denied(task_id, comment_id)
+        comment = self._get_comment_or_404(task_id, comment_id)
         if isinstance(comment, Response):  # Error Response
             return comment
         
@@ -198,14 +198,14 @@ class CommentDetailView(APIView):
         comment.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
     
-    def _get_comment_or_permission_denied(self, task_id, comment_id):
-        """Get comment or return permission denied for security"""
+    def _get_comment_or_404(self, task_id, comment_id):
+        """Get comment or return 404"""
         try:
             return Comment.objects.get(id=comment_id, task_id=task_id)
         except Comment.DoesNotExist:
             return Response(
-                {'error': 'No permission'}, 
-                status=status.HTTP_403_FORBIDDEN
+                {'error': 'Comment not found'}, 
+                status=status.HTTP_404_NOT_FOUND
             )
     
     def _check_author_permission(self, user, comment):

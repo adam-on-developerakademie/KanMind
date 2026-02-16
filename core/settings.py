@@ -94,7 +94,7 @@ TEMPLATES = [
 ]
 
 # CORS settings for frontend connection
-CORS_ALLOWED_ORIGINS = [
+""" CORS_ALLOWED_ORIGINS = [
     "http://localhost:5000",
     "http://127.0.0.1:5000",
     "http://localhost:5500",
@@ -105,7 +105,16 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:8080",
     "http://localhost:3000",
     "http://127.0.0.1:3000",
+] """
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",  # React
+    "http://localhost:5000",  # Flask/Vanilla JS
+    "http://localhost:5500",  # Live Server
+    "http://localhost:8080",  # Vue.js
+    
 ]
+
 
 CORS_ALLOW_CREDENTIALS = True
 
