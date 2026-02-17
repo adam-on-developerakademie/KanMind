@@ -1,4 +1,5 @@
 from django.db import models
+from django.shortcuts import get_object_or_404
 
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
@@ -18,9 +19,15 @@ class TaskBaseView(APIView):
     permission_classes = [IsAuthenticated]
     
     def get_task_or_404(self, task_id):
-        """Get task object or raise 404"""
-        from django.shortcuts import get_object_or_404
-        return get_object_or_404(Task, id=task_id)
+        """Get task object and check board permission"""
+        task = get_object_or_404(Task, id=task_id)
+        
+        # Check if user has access to the board
+        if not self.check_board_permission(self.request.user, task.board):
+            # Task exists but no board permission - return 403 in calling method
+            return None  # Signal permission error to caller
+        
+        return task
     
     def check_board_permission(self, user, board):
         """Check board permission"""
@@ -64,6 +71,29 @@ class TaskCreateView(TaskBaseView):
     Create task
     """
     def post(self, request):
+        # First validate board exists and user has permission
+        board_id = request.data.get('board')
+        if not board_id:
+            return Response(
+                {'error': 'Board ID is required'}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # Check if board exists - return 404 if not found
+        from boards_app.models import Board
+        try:
+            board = Board.objects.get(id=board_id)
+        except Board.DoesNotExist:
+            return Response(
+                {'error': 'Board not found'}, 
+                status=status.HTTP_404_NOT_FOUND
+            )
+        
+        # Check if user has permission to this board - return 403 if no access
+        if not self.check_board_permission(request.user, board):
+            return self.get_permission_error()
+        
+        # Now proceed with serializer validation for other fields
         serializer = TaskCreateUpdateSerializer(
             data=request.data,
             context={'request': request}
@@ -72,16 +102,9 @@ class TaskCreateView(TaskBaseView):
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
-        if not self._check_create_permission(request, serializer.validated_data['board']):
-            return self.get_permission_error()
-        
         task = serializer.save()
         response_serializer = TaskSerializer(task)
         return Response(response_serializer.data, status=status.HTTP_201_CREATED)
-    
-    def _check_create_permission(self, request, board):
-        """Check creation permission for board"""
-        return self.check_board_permission(request.user, board)
 
 class TaskDetailView(TaskBaseView):
     """
@@ -91,7 +114,7 @@ class TaskDetailView(TaskBaseView):
     def patch(self, request, task_id):
         task = self.get_task_or_404(task_id)
         
-        if not self.check_board_permission(request.user, task.board):
+        if task is None:  # No board permission
             return self.get_permission_error()
         
         return self._update_task(request, task)
@@ -113,6 +136,9 @@ class TaskDetailView(TaskBaseView):
     def delete(self, request, task_id):
         task = self.get_task_or_404(task_id)
         
+        if task is None:  # No board permission
+            return self.get_permission_error()
+        
         if not self._check_delete_permission(request.user, task):
             return self.get_permission_error()
         
@@ -131,7 +157,7 @@ class TaskCommentsView(TaskBaseView):
     def get(self, request, task_id):
         task = self.get_task_or_404(task_id)
         
-        if not self.check_board_permission(request.user, task.board):
+        if task is None:  # No board permission
             return self.get_permission_error()
         
         return self._get_comments_response(task)
@@ -145,7 +171,7 @@ class TaskCommentsView(TaskBaseView):
     def post(self, request, task_id):
         task = self.get_task_or_404(task_id)
         
-        if not self.check_board_permission(request.user, task.board):
+        if task is None:  # No board permission
             return self.get_permission_error()
         
         return self._create_comment(request, task)
