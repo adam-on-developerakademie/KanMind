@@ -37,7 +37,17 @@ class TaskCreateUpdateSerializer(serializers.ModelSerializer):
     
     def validate(self, attrs):
         """Validation of task data"""
+        # For update operations (PATCH), the board might not be in attrs
+        # Then we get it from the existing instance
         board = attrs.get('board')
+        if not board and hasattr(self, 'instance') and self.instance:
+            board = self.instance.board
+        
+        # Board validation
+        if not board:
+            raise serializers.ValidationError(
+                {'board': 'Board is required for validation.'}
+            )
         
         # Validate assignee
         assignee_id = attrs.get('assignee_id')

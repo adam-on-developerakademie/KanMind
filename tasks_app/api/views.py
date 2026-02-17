@@ -18,14 +18,9 @@ class TaskBaseView(APIView):
     permission_classes = [IsAuthenticated]
     
     def get_task_or_404(self, task_id):
-        """Get task object or return 404"""
-        try:
-            return Task.objects.get(id=task_id)
-        except Task.DoesNotExist:
-            return Response(
-                {'error': 'Task not found'}, 
-                status=status.HTTP_404_NOT_FOUND
-            )
+        """Get task object or raise 404"""
+        from django.shortcuts import get_object_or_404
+        return get_object_or_404(Task, id=task_id)
     
     def check_board_permission(self, user, board):
         """Check board permission"""
@@ -95,8 +90,6 @@ class TaskDetailView(TaskBaseView):
     """
     def patch(self, request, task_id):
         task = self.get_task_or_404(task_id)
-        if isinstance(task, Response):  # Error Response
-            return task
         
         if not self.check_board_permission(request.user, task.board):
             return self.get_permission_error()
@@ -119,8 +112,6 @@ class TaskDetailView(TaskBaseView):
     
     def delete(self, request, task_id):
         task = self.get_task_or_404(task_id)
-        if isinstance(task, Response):  # Error Response
-            return task
         
         if not self._check_delete_permission(request.user, task):
             return self.get_permission_error()
@@ -139,8 +130,6 @@ class TaskCommentsView(TaskBaseView):
     """
     def get(self, request, task_id):
         task = self.get_task_or_404(task_id)
-        if isinstance(task, Response):  # Error Response
-            return task
         
         if not self.check_board_permission(request.user, task.board):
             return self.get_permission_error()
@@ -155,8 +144,6 @@ class TaskCommentsView(TaskBaseView):
     
     def post(self, request, task_id):
         task = self.get_task_or_404(task_id)
-        if isinstance(task, Response):  # Error Response
-            return task
         
         if not self.check_board_permission(request.user, task.board):
             return self.get_permission_error()
@@ -186,8 +173,6 @@ class CommentDetailView(APIView):
     
     def delete(self, request, task_id, comment_id):
         comment = self._get_comment_or_404(task_id, comment_id)
-        if isinstance(comment, Response):  # Error Response
-            return comment
         
         if not self._check_author_permission(request.user, comment):
             return Response(
@@ -199,14 +184,9 @@ class CommentDetailView(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
     
     def _get_comment_or_404(self, task_id, comment_id):
-        """Get comment or return 404"""
-        try:
-            return Comment.objects.get(id=comment_id, task_id=task_id)
-        except Comment.DoesNotExist:
-            return Response(
-                {'error': 'Comment not found'}, 
-                status=status.HTTP_404_NOT_FOUND
-            )
+        """Get comment or raise 404"""
+        from django.shortcuts import get_object_or_404
+        return get_object_or_404(Comment, id=comment_id, task_id=task_id)
     
     def _check_author_permission(self, user, comment):
         """Check if user is the author"""
