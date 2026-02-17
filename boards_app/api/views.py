@@ -1,5 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.db import models
+from django.core.exceptions import PermissionDenied
+from django.shortcuts import get_object_or_404
 
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
@@ -48,10 +50,30 @@ class BoardViewSet(ModelViewSet):
     
     def get_queryset(self):
         """Only boards user is allowed to see"""
+        #print(f"get_queryset called for user: {self.request.user}")  # Debug
         user = self.request.user
         return Board.objects.filter(
             models.Q(owner=user) | models.Q(members=user)
         ).distinct()
+    
+    def get_object(self):
+        """Get object and return 403 instead of 404 if no permission"""
+        pk = self.kwargs.get('pk')
+        
+        # First check if board exists at all
+        try:
+            board = Board.objects.get(pk=pk)
+        except Board.DoesNotExist:
+            # Board doesn't exist - return 404
+            raise get_object_or_404(Board, pk=pk)
+        
+        # Board exists, check permissions  
+        user = self.request.user
+        if not (board.owner == user or board.members.filter(id=user.id).exists()):
+            # Board exists but no permission - return 403
+            raise PermissionDenied("You don't have permission to access this board")
+        
+        return board
 
 class EmailCheckView(APIView):
     """
@@ -93,4 +115,4 @@ class EmailCheckView(APIView):
             {'error': 'Email not found'}, 
             status=status.HTTP_404_NOT_FOUND
         )
-            
+
